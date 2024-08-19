@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { PrimeNGConfig } from 'primeng/api';
@@ -20,7 +20,7 @@ let initRef = {...init};
   styleUrl: './app.component.less'
 })
 
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit, OnDestroy{
   reportAddr: string = '';
   title = 'visualizer-xdm-demo-angular';
   families!: Array<{name:string, code:string}>;
@@ -100,6 +100,10 @@ export class AppComponent implements OnInit{
         true
       )
     });
+  }
+
+  ngOnDestroy(){
+    this.xdm?.destroy();
   }
 
   ngOnInit() {
