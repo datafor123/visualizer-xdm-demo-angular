@@ -2,9 +2,9 @@
 
 This repository contains the source code for the Angular version of the Communite with visualizer report via XDM app.
 
-If you are looking for the VueJS version of the app, please visit [this repository](https://github.com/datafor123/visualizer-xdm-demo-vue3).
+If you are looking for the ![image](https://github.com/user-attachments/assets/5fccfc18-78d5-4a2b-a569-ea931dff180f)VueJS version of the app, please visit [this repository](https://github.com/datafor123/visualizer-xdm-demo-vue3).
 
-If you are looking for the ReactJS version of the app, please visit [this repository](https://github.com/datafor123/visualizer-xdm-demo).
+If you are looking for the ![image](https://github.com/user-attachments/assets/507e08d0-e535-45e4-a753-8b1850d23202)ReactJS version of the app, please visit [this repository](https://github.com/datafor123/visualizer-xdm-demo).
 
 ## Install the dependencies
 
