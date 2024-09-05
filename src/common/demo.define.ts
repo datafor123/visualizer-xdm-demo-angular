@@ -19,6 +19,7 @@ export const reportParams = [
  */
 export const PARAMETERNAME = {
   productFamily: '[product_class].[hierarchy_product_family1].[product_family]',
+  storeType: '[store].[store_type].[store_type]',
   date: '[time_by_day].[AGG_the_date].[the_date]' 
 }
 
@@ -28,6 +29,13 @@ export type SelectedType = {
 }
 
 export const allFamiliesAvaiable = ['Drink', 'Food', 'Non-Consumable'].map(o=>({name: o, code: o}));
+export const allStoreTypeAvaiable = [
+  'Deluxe Supermarket', 
+  'Gourmet Supermarket', 
+  'Mid-Size Grocery', 
+  'Small Grocery', 
+  'Supermarket'
+].map(o=>({name: o, code: o}));
 /**
  * Initial filter criteria. 
  * 
@@ -38,6 +46,7 @@ export const allFamiliesAvaiable = ['Drink', 'Food', 'Non-Consumable'].map(o=>({
  */
 export type PanelSelectedProps = {
   family: SelectedType[], 
+  storeType: SelectedType[],
   date: {
     start: number, 
     end: number
@@ -46,6 +55,7 @@ export type PanelSelectedProps = {
 export const defaults:PanelSelectedProps = {
   //family: [{name: 'Non-Consumable', code: 'Non-Consumable'}], 
   family: [], 
+  storeType: [],
   date: {
     start: moment('1997-3-5').valueOf(),  
     end: moment('1997-3-20').valueOf()

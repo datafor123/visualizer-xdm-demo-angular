@@ -36,6 +36,16 @@
       />
     </div>
     <div>
+      <label>Store Type</label
+      ><p-multiSelect
+        [options]="storeTypes"
+        [(ngModel)]="storeType"
+        [style]="{ width: '260px' }"
+        optionLabel="name"
+        placeholder="Select a store type"
+      />
+    </div>
+    <div>
       <label>Date</label
       ><p-calendar
         [(ngModel)]="date"

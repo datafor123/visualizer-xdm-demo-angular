@@ -8,7 +8,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { DomSanitizer } from '@angular/platform-browser';
 import moment from 'moment';
 import XDMWorker, {packageDaterangeMessage, packageNormalMessage} from '../common/send.xdm';
-import { reportAddress, reportParams, defaults as init, allFamiliesAvaiable, PARAMETERNAME, type PanelSelectedProps, type SelectedType} from '../common/demo.define';
+import { reportAddress, reportParams, defaults as init, allFamiliesAvaiable, allStoreTypeAvaiable, PARAMETERNAME, type PanelSelectedProps, type SelectedType} from '../common/demo.define';
 
 let initRef = {...init};
 
@@ -24,6 +24,7 @@ export class AppComponent implements OnInit, OnDestroy{
   reportAddr: string = '';
   title = 'visualizer-xdm-demo-angular';
   families!: Array<{name:string, code:string}>;
+  storeTypes!: Array<{name:string, code:string}>;
   xdm: XDMWorker | null = null;
   enablueApply: boolean = true; 
   @ViewChild('reportFrame') iframeRef: ElementRef<HTMLIFrameElement> | undefined; 
@@ -32,15 +33,25 @@ export class AppComponent implements OnInit, OnDestroy{
    * Calculate whether the apply button is enabled
    */
   #calculateApply(){
-    const {family, date} = this;
+    const {family, date, storeType} = this;
     if(
       family.sort((a,b)=>a.name.localeCompare(b.name)).join('') === initRef.family.sort((a,b)=>a.name.localeCompare(b.name)).join('') && 
-      moment(date?.[0]).valueOf() === initRef.date.start && moment(date?.[1]).valueOf() === initRef.date.end
+      moment(date?.[0]).valueOf() === initRef.date.start && moment(date?.[1]).valueOf() === initRef.date.end &&
+      storeType.sort((a,b)=>a.name.localeCompare(b.name)).join('') === initRef.storeType.sort((a,b)=>a.name.localeCompare(b.name)).join('')
     ){
       this.enablueApply = false;
     }else{
       this.enablueApply = true;
     }
+  }
+
+  #storeType: Array<SelectedType> = [];
+  get storeType(): Array<SelectedType>{
+    return this.#storeType;
+  }
+  set storeType(value: Array<SelectedType>){
+    this.#storeType = value;
+    this.#calculateApply();
   }
 
   /**
@@ -71,7 +82,11 @@ export class AppComponent implements OnInit, OnDestroy{
    * Apply the selected filter criteria
    */
   onCommitEvent(){
-    const msg = {family: this.family, date: {start: moment(this.date?.[0]).valueOf(), end: moment(this.date?.[1]).valueOf()}};
+    const msg = {
+      family: this.family, 
+      storeType: this.storeType,
+      date: {start: moment(this.date?.[0]).valueOf(), end: moment(this.date?.[1]).valueOf()}
+    };
     this.xdm?.send(
       this.encodeQueryString(msg), 
       this.iframeRef?.nativeElement?.contentWindow as Window
@@ -84,11 +99,12 @@ export class AppComponent implements OnInit, OnDestroy{
    * Encode the selected filter criteria into the query string
    */
   encodeQueryString(data:PanelSelectedProps){
-    const { family: p, date: d } = data;
+    const { family: p, date: d, storeType: s} = data;
     const sender = [
       ...packageDaterangeMessage(PARAMETERNAME.date, [[{ i: 1, v: d.start.valueOf() }, { i: 1, v: d.end.valueOf() }]]), 
     ];
     p.length && sender.push(...packageNormalMessage(PARAMETERNAME.productFamily, [...p.map(o=>o.code)]));
+    s.length && sender.push(...packageNormalMessage(PARAMETERNAME.storeType, [...s.map(o=>o.code)]));
     return sender; 
   }
 
@@ -110,6 +126,8 @@ export class AppComponent implements OnInit, OnDestroy{
     this.primengConfig.ripple = true;
     this.families = [...allFamiliesAvaiable];
     this.family = initRef.family?.map((o:SelectedType)=>({...o}))||[];
+    this.storeType = initRef.storeType?.map((o:SelectedType)=>({...o}))||[];
+    this.storeTypes = [...allStoreTypeAvaiable];
     this.date = [moment(initRef.date.start).toDate(), moment(initRef.date.end).toDate()];
     this.reportAddr = this.sanitizer.bypassSecurityTrustResourceUrl(`${reportAddress}&${reportParams.join('&')}`) as string;
   }
